@@ -40,6 +40,7 @@ private enum Function: String {
     case substr
     case like = "LIKE"
     case `in` = "IN"
+    case notIn = "NOT IN"
     case glob = "GLOB"
     case match = "MATCH"
     case regexp = "REGEXP"
@@ -703,6 +704,38 @@ extension Collection where Iterator.Element : Value {
     public func contains(_ expression: Expression<Iterator.Element?>) -> Expression<Bool?> {
         let templates = [String](repeating: "?", count: count).joined(separator: ", ")
         return Function.in.infix(expression, Expression<Void>("(\(templates))", map { $0.datatypeValue }))
+    }
+    
+    /// Builds a copy of the expression prepended with an `NOT IN` check against the
+    /// collection.
+    ///
+    ///     let name = Expression<String>("name")
+    ///     ["alice", "betty"].containsNot(name)
+    ///     // "name" NOT IN ('alice', 'betty')
+    ///
+    /// - Parameter pattern: A pattern to match.
+    ///
+    /// - Returns: A copy of the expression prepended with an `NOT IN` check against
+    ///   the collection.
+    public func containsNot(_ expression: Expression<Iterator.Element>) -> Expression<Bool> {
+        let templates = [String](repeating: "?", count: count).joined(separator: ", ")
+        return Function.notIn.infix(expression, Expression<Void>("(\(templates))", map { $0.datatypeValue }))
+    }
+    
+    /// Builds a copy of the expression prepended with an `NOT IN` check against the
+    /// collection.
+    ///
+    ///     let name = Expression<String>("name")
+    ///     ["alice", "betty"].containsNot(name)
+    ///     // "name" NOT IN ('alice', 'betty')
+    ///
+    /// - Parameter pattern: A pattern to match.
+    ///
+    /// - Returns: A copy of the expression prepended with an `NOT IN` check against
+    ///   the collection.
+    public func containsNot(_ expression: Expression<Iterator.Element?>) -> Expression<Bool?> {
+        let templates = [String](repeating: "?", count: count).joined(separator: ", ")
+        return Function.notIn.infix(expression, Expression<Void>("(\(templates))", map { $0.datatypeValue }))
     }
 
 }

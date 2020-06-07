@@ -801,10 +801,12 @@ extension QueryType {
 public struct Table : SchemaType {
 
     public static let identifier = "TABLE"
+    public let name: String
 
     public var clauses: QueryClauses
 
     public init(_ name: String, database: String? = nil) {
+        self.name = name
         clauses = QueryClauses(name, alias: nil, database: database)
     }
 

@@ -88,11 +88,11 @@ extension String {
         return "\(self) ".wrap(expressions) as Expression<Void>
     }
 
-    func wrap<T>(_ expression: Expressible) -> Expression<T> {
+    public func wrap<T>(_ expression: Expressible) -> Expression<T> {
         return Expression("\(self)(\(expression.expression.template))", expression.expression.bindings)
     }
 
-    func wrap<T>(_ expressions: [Expressible]) -> Expression<T> {
+    public func wrap<T>(_ expressions: [Expressible]) -> Expression<T> {
         return wrap(", ".join(expressions))
     }
 

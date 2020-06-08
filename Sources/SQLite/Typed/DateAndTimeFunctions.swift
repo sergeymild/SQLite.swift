@@ -71,19 +71,19 @@ public class DateFunctions {
 
 extension Date {
     public var date: Expression<Date?> {
-        return DateFunctions.date(dateFormatter.string(from: self))
+        return DateFunctions.date(sqlDateFormatter.string(from: self))
     }
 
     public var time: Expression<Date?> {
-        return DateFunctions.time(dateFormatter.string(from: self))
+        return DateFunctions.time(sqlDateFormatter.string(from: self))
     }
 
     public var datetime: Expression<Date?> {
-        return DateFunctions.datetime(dateFormatter.string(from: self))
+        return DateFunctions.datetime(sqlDateFormatter.string(from: self))
     }
 
     public var julianday: Expression<Date?> {
-        return DateFunctions.julianday(dateFormatter.string(from: self))
+        return DateFunctions.julianday(sqlDateFormatter.string(from: self))
     }
 }
 

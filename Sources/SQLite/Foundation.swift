@@ -49,11 +49,11 @@ extension Date : Value {
     }
 
     public static func fromDatatypeValue(_ stringValue: String) -> Date {
-        return dateFormatter.date(from: stringValue)!
+        return sqlDateFormatter.date(from: stringValue)!
     }
 
     public var datatypeValue: String {
-        return dateFormatter.string(from: self)
+        return sqlDateFormatter.string(from: self)
     }
 
 }
@@ -61,7 +61,7 @@ extension Date : Value {
 /// A global date formatter used to serialize and deserialize `NSDate` objects.
 /// If multiple date formats are used in an application’s database(s), use a
 /// custom `Value` type per additional format.
-public var dateFormatter: DateFormatter = {
+public var sqlDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
     formatter.locale = Locale(identifier: "en_US_POSIX")

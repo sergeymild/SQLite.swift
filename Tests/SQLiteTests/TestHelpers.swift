@@ -98,7 +98,7 @@ let string = Expression<String>("string")
 let stringOptional = Expression<String?>("stringOptional")
 
 func AssertSQL(_ expression1: @autoclosure () -> String, _ expression2: @autoclosure () -> Expressible, file: StaticString = #file, line: UInt = #line) {
-    XCTAssertEqual(expression1(), expression2().asSQL(), file: file, line: line)
+    XCTAssertEqual(expression1(), expression2().sql, file: file, line: line)
 }
 
 let table = Table("table")

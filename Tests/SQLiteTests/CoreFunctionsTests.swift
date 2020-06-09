@@ -117,7 +117,7 @@ class CoreFunctionsTests : XCTestCase {
     func test_nilCoalescingOperator_wrapsOptionalsWithIfnullFunction() {
         AssertSQL("ifnull(\"intOptional\", 1)", intOptional ?? 1)
         // AssertSQL("ifnull(\"doubleOptional\", 1.0)", doubleOptional ?? 1) // rdar://problem/21677256
-        XCTAssertEqual("ifnull(\"doubleOptional\", 1.0)", (doubleOptional ?? 1).asSQL())
+        XCTAssertEqual("ifnull(\"doubleOptional\", 1.0)", (doubleOptional ?? 1).sql)
         AssertSQL("ifnull(\"stringOptional\", 'literal')", stringOptional ?? "literal")
 
         AssertSQL("ifnull(\"intOptional\", \"int\")", intOptional ?? int)

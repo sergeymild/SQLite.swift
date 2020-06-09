@@ -555,7 +555,7 @@ class QueryIntegrationTests : SQLiteTestCase {
         let query3 = users.select(users[*], Expression<Int>(literal: "1 AS weight")).filter(email == "sally@example.com")
         let query4 = users.select(users[*], Expression<Int>(literal: "2 AS weight")).filter(email == "alice@example.com")
         
-        print(query3.union(query4).order(Expression<Int>(literal: "weight")).asSQL())
+        print(query3.union(query4).order(Expression<Int>(literal: "weight")).sql)
         
         let orderedIDs = try db.prepare(query3.union(query4).order(Expression<Int>(literal: "weight"), email)).map { $0[id] }
         XCTAssertEqual(Array(expectedIDs.reversed()), orderedIDs)

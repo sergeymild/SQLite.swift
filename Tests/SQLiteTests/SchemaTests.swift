@@ -783,23 +783,23 @@ class SchemaTests : XCTestCase {
     }
 
     func test_createIndex_compilesCreateIndexExpression() {
-        XCTAssertEqual("CREATE INDEX \"index_table_on_int64\" ON \"table\" (\"int64\")", table.createIndex(int64))
+        XCTAssertEqual("CREATE INDEX \"index_table_on_int64\" ON \"table\" (\"int64\")", table.createIndex(int64).sql)
 
         XCTAssertEqual(
             "CREATE UNIQUE INDEX \"index_table_on_int64\" ON \"table\" (\"int64\")",
-            table.createIndex(int64, unique: true)
+            table.createIndex(int64, unique: true).sql
         )
         XCTAssertEqual(
             "CREATE INDEX IF NOT EXISTS \"index_table_on_int64\" ON \"table\" (\"int64\")",
-            table.createIndex(int64, ifNotExists: true)
+            table.createIndex(int64, ifNotExists: true).sql
         )
         XCTAssertEqual(
             "CREATE UNIQUE INDEX IF NOT EXISTS \"index_table_on_int64\" ON \"table\" (\"int64\")",
-            table.createIndex(int64, unique: true, ifNotExists: true)
+            table.createIndex(int64, unique: true, ifNotExists: true).sql
         )
         XCTAssertEqual(
             "CREATE UNIQUE INDEX IF NOT EXISTS \"main\".\"index_table_on_int64\" ON \"table\" (\"int64\")",
-            qualifiedTable.createIndex(int64, unique: true, ifNotExists: true)
+            qualifiedTable.createIndex(int64, unique: true, ifNotExists: true).sql
         )
     }
 

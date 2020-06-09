@@ -680,7 +680,8 @@ extension QueryType {
     }
 
     public func upsert(_ insertValues: [Setter], onConflictOf conflicting: Expressible) -> Insert {
-        let setValues = insertValues.filter { $0.column.asSQL() != conflicting.asSQL() }
+        let conflictSql = conflicting.sql
+        let setValues = insertValues.filter { $0.column.sql != conflictSql }
             .map { Setter(excluded: $0.column) }
         return upsert(insertValues, onConflictOf: conflicting, set: setValues)
     }

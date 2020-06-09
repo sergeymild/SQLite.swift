@@ -72,7 +72,7 @@ extension String {
         return Expression<Void>(template.joined(separator: self), bindings)
     }
 
-    func infix<T>(_ lhs: Expressible, _ rhs: Expressible, wrap: Bool = true) -> Expression<T> {
+    public func infix<T>(_ lhs: Expressible, _ rhs: Expressible, wrap: Bool = true) -> Expression<T> {
         return infix([lhs, rhs], wrap: wrap)
     }
     

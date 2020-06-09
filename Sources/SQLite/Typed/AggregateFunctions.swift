@@ -244,11 +244,9 @@ extension ExpressionType where UnderlyingType : _OptionalType, UnderlyingType.Wr
 }
 
 extension ExpressionType where UnderlyingType == Int {
-
     static func count(_ star: Star) -> Expression<UnderlyingType> {
         return Function.count.wrap(star(nil, nil))
     }
-
 }
 
 /// Builds an expression representing `count(*)` (when called with the `*`

@@ -44,10 +44,15 @@ extension Table {
             withoutRowid ? Expression<Void>(literal: "WITHOUT ROWID") : nil
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
-    public func create(temporary: Bool = false, ifNotExists: Bool = false, withoutRowid: Bool = false, @TableFunctionalBuilder block: () -> [Expressible]) -> String {
+    public func create(
+        temporary: Bool = false,
+        ifNotExists: Bool = false,
+        withoutRowid: Bool = false,
+        @TableFunctionalBuilder block: () -> [Expressible]
+    ) -> String {
         
         let clauses: [Expressible?] = [
             create(Table.identifier, tableName(), temporary ? .temporary : nil, ifNotExists),
@@ -55,7 +60,7 @@ extension Table {
             withoutRowid ? Expression<Void>(literal: "WITHOUT ROWID") : nil
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
     public func create(_ query: QueryType, temporary: Bool = false, ifNotExists: Bool = false) -> String {
@@ -65,7 +70,7 @@ extension Table {
             query
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
     // MARK: - ALTER TABLE … ADD COLUMN
@@ -124,7 +129,7 @@ extension Table {
             tableName(),
             Expression<Void>(literal: "ADD COLUMN"),
             expression
-        ]).asSQL()
+        ]).sql
     }
     
     // MARK: - ALTER TABLE … RENAME TO
@@ -135,7 +140,7 @@ extension Table {
     
     // MARK: - CREATE INDEX
     
-    public func createIndex(_ columns: Expressible..., unique: Bool = false, ifNotExists: Bool = false) -> String {
+    public func createIndex(_ columns: Expressible..., unique: Bool = false, ifNotExists: Bool = false) -> Expressible {
         let clauses: [Expressible?] = [
             create("INDEX", indexName(columns), unique ? .unique : nil, ifNotExists),
             Expression<Void>(literal: "ON"),
@@ -143,7 +148,7 @@ extension Table {
             "".wrap(columns) as Expression<Void>
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 })
     }
     
     // MARK: - DROP INDEX
@@ -182,7 +187,7 @@ extension View {
             query
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
     // MARK: - DROP VIEW
@@ -204,7 +209,7 @@ extension VirtualTable {
             using
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
     // MARK: - ALTER TABLE … RENAME TO
@@ -497,7 +502,7 @@ private extension QueryType {
             tableName(),
             Expression<Void>(literal: "RENAME TO"),
             Expression<Void>(to.clauses.from.name)
-        ]).asSQL()
+        ]).sql
     }
     
     func drop(_ identifier: String, _ name: Expressible, _ ifExists: Bool) -> String {
@@ -507,7 +512,7 @@ private extension QueryType {
             name
         ]
         
-        return " ".join(clauses.compactMap { $0 }).asSQL()
+        return " ".join(clauses.compactMap { $0 }).sql
     }
     
 }

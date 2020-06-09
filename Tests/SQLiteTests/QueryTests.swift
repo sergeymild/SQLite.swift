@@ -269,6 +269,24 @@ class QueryTests : XCTestCase {
             insert
         )
     }
+    
+    func test_upsert_withOnConflict_compilesInsertOrOnConflictExpression() {
+        AssertSQL(
+            "INSERT INTO \"users\" (\"email\", \"age\") VALUES ('alice@example.com', 30) ON CONFLICT (\"email\") DO UPDATE SET \"age\" = \"excluded\".\"age\"",
+            users.upsert(email <- "alice@example.com", age <- 30, onConflictOf: email)
+        )
+    }
+
+    func test_upsert_encodable() throws {
+        let emails = Table("emails")
+        let string = Expression<String>("string")
+        let value = TestCodable(int: 1, string: "2", bool: true, float: 3, double: 4, optional: nil, sub: nil)
+        let insert = try emails.upsert(value, onConflictOf: string)
+        AssertSQL(
+            "INSERT INTO \"emails\" (\"int\", \"string\", \"bool\", \"float\", \"double\") VALUES (1, '2', 1, 3.0, 4.0) ON CONFLICT (\"string\") DO UPDATE SET \"int\" = \"excluded\".\"int\", \"bool\" = \"excluded\".\"bool\", \"float\" = \"excluded\".\"float\", \"double\" = \"excluded\".\"double\"",
+            insert
+        )
+    }
 
     func test_update_compilesUpdateExpression() {
         AssertSQL(
@@ -378,6 +396,7 @@ class QueryIntegrationTests : SQLiteTestCase {
 
     let id = Expression<Int64>("id")
     let email = Expression<String>("email")
+    let age = Expression<Int>("age")
 
     override func setUp() {
         super.setUp()
@@ -481,6 +500,20 @@ class QueryIntegrationTests : SQLiteTestCase {
     func test_insert() {
         let id = try! db.run(users.insert(email <- "alice@example.com"))
         XCTAssertEqual(1, id)
+    }
+    
+    func test_upsert() throws {
+        let fetchAge = { () throws -> Int? in
+            return try self.db.pluck(self.users.filter(self.email == "alice@example.com")).flatMap { $0[self.age] }
+        }
+
+        let id = try db.run(users.upsert(email <- "alice@example.com", age <- 30, onConflictOf: email))
+        XCTAssertEqual(1, id)
+        XCTAssertEqual(30, try fetchAge())
+
+        let nextId = try db.run(users.upsert(email <- "alice@example.com", age <- 42, onConflictOf: email))
+        XCTAssertEqual(1, nextId)
+        XCTAssertEqual(42, try fetchAge())
     }
 
     func test_update() {

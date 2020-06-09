@@ -59,7 +59,12 @@ public struct Setter {
         self.column = column
         self.value = Expression<V?>(value: value)
     }
-
+    
+    init(excluded column: Expressible) {
+        let excluded = Expression<Void>("excluded")
+        self.column = column
+        self.value = ".".join([excluded, column.expression])
+    }
 }
 
 extension Setter : Expressible {

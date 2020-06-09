@@ -93,6 +93,14 @@ class QueryTests : XCTestCase {
             users.join(posts, on: posts[userId] == users[id]).join(categories, on: categories[id] == posts[categoryId])
         )
     }
+    
+    func test_join_compilesJoinClause_withNamespaces() {
+        let query = users.join(posts, on: posts[userId] == users[id]).select(posts[*], users[*])
+        AssertSQL(
+            "SELECT \"posts\".*, \"users\".* FROM \"users\" INNER JOIN \"posts\" ON (\"posts\".\"user_id\" = \"users\".\"id\")",
+            query
+        )
+    }
 
     func test_filter_compilesWhereClause() {
         AssertSQL("SELECT * FROM \"users\" WHERE (\"admin\" = 1)", users.filter(admin == true))

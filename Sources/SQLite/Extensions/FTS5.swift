@@ -58,18 +58,21 @@ open class FTS5Config : FTSConfig {
     }
 
     /// [External Content Tables](https://www.sqlite.org/fts5.html#section_4_4_2)
+    @discardableResult
     open func contentRowId(_ column: Expressible) -> Self {
         self.contentRowId = column
         return self
     }
 
     /// [The Columnsize Option](https://www.sqlite.org/fts5.html#section_4_5)
+    @discardableResult
     open func columnSize(_ size: Int) -> Self {
         self.columnSize = size
         return self
     }
 
     /// [The Detail Option](https://www.sqlite.org/fts5.html#section_4_6)
+    @discardableResult
     open func detail(_ detail: Detail) -> Self {
         self.detail = detail
         return self

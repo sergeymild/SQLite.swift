@@ -378,7 +378,7 @@ public func primaryKey<T : Value, U : Value, V : Value, W : Value>(_ compositeA:
 
 fileprivate func primaryKey(_ composite: [Expressible]) -> Expressible {
     //definitions.append("PRIMARY KEY".prefix(composite))
-    return "PRIMARY KEY".prefix(composite)
+    return PrimaryKey.default.rawValue.prefix(composite)
 }
 
 public func unique(_ columns: Expressible...) -> Expressible {
@@ -445,12 +445,9 @@ fileprivate func foreignKey(_ column: Expressible, _ references: (QueryType, Exp
     return " ".join(clauses.compactMap { $0 })
 }
 
-public enum PrimaryKey {
-    
-    case `default`
-    
-    case autoincrement
-    
+public enum PrimaryKey: String {
+    case `default` = "PRIMARY KEY"
+    case autoincrement = "PRIMARY KEY AUTOINCREMENT"
 }
 
 public struct Module {
@@ -519,7 +516,7 @@ private func definition(_ column: Expressible, _ datatype: String, _ primaryKey:
     let clauses: [Expressible?] = [
         column,
         Expression<Void>(literal: datatype),
-        primaryKey.map { Expression<Void>(literal: $0 == .autoincrement ? "PRIMARY KEY AUTOINCREMENT" : "PRIMARY KEY") },
+        primaryKey.map { Expression<Void>(literal: $0.rawValue) },
         null ? nil : Expression<Void>(literal: "NOT NULL"),
         unique ? Expression<Void>(literal: "UNIQUE") : nil,
         check.map { " ".join([Expression<Void>(literal: "CHECK"), $0]) },

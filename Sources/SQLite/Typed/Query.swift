@@ -1003,7 +1003,6 @@ extension Connection {
                             try expandGlob(true)(q)
                             continue column
                         }
-                        throw QueryError.noSuchTable(name: namespace)
                     }
                     throw QueryError.noSuchTable(name: namespace)
                 }

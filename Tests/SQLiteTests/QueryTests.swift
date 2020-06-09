@@ -460,16 +460,18 @@ class QueryIntegrationTests : SQLiteTestCase {
 
     func test_select_codable() throws {
         let table = Table("codable")
-        try db.run(table.create { builder in
-            builder.column(Expression<Int>("int"))
-            builder.column(Expression<String>("string"))
-            builder.column(Expression<Bool>("bool"))
-            builder.column(Expression<Double>("float"))
-            builder.column(Expression<Double>("double"))
-            builder.column(Expression<Date>("date"))
-            builder.column(Expression<String?>("optional"))
-            builder.column(Expression<Data>("sub"))
-        })
+        try db.run {
+            table.create {
+                column(Expression<Int>("int"))
+                column(Expression<String>("string"))
+                column(Expression<Bool>("bool"))
+                column(Expression<Double>("float"))
+                column(Expression<Double>("double"))
+                column(Expression<Date>("date"))
+                column(Expression<String?>("optional"))
+                column(Expression<Data>("sub"))
+            }
+        }
 
         let value1 = TestCodable(int: 1, string: "2", bool: true, float: 3, double: 4, date: Date(timeIntervalSince1970: 0), optional: nil, sub: nil)
         let value = TestCodable(int: 5, string: "6", bool: true, float: 7, double: 8, date: Date(timeIntervalSince1970: 5000), optional: "optional", sub: value1)

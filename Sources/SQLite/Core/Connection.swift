@@ -34,6 +34,13 @@ import CSQLite
 import SQLite3
 #endif
 
+@_functionBuilder
+public struct ConnectionRunBuilder {
+    public static func buildBlock(_ segments: String...) -> [String] {
+        return segments.map { $0 }
+    }
+}
+
 /// A connection to SQLite.
 public final class Connection {
 
@@ -204,6 +211,15 @@ public final class Connection {
     /// - Returns: A prepared statement.
     public func prepare(_ statement: String, _ bindings: [String: Binding?]) throws -> Statement {
         return try prepare(statement).bind(bindings)
+    }
+    
+    public func run(@ConnectionRunBuilder block: () -> [String]) throws {
+        let queries = block()
+        try queries.forEach { try self.run($0) }
+    }
+    
+    public func run(@ConnectionRunBuilder block: () -> String) throws {
+        try run(block())
     }
 
     // MARK: - Run

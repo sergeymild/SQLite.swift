@@ -39,7 +39,6 @@ extension Data : Value {
             return Blob(bytes: pointer.baseAddress!, length: count)
         }
     }
-
 }
 
 extension Date : Value {
@@ -55,7 +54,36 @@ extension Date : Value {
     public var datatypeValue: String {
         return sqlDateFormatter.string(from: self)
     }
+}
 
+extension UUID : Value {
+
+    public static var declaredDatatype: String {
+        return String.declaredDatatype
+    }
+
+    public static func fromDatatypeValue(_ stringValue: String) -> UUID {
+        return UUID(uuidString: stringValue)!
+    }
+
+    public var datatypeValue: String {
+        return self.uuidString
+    }
+}
+
+extension URL : Value {
+
+    public static var declaredDatatype: String {
+        return String.declaredDatatype
+    }
+
+    public static func fromDatatypeValue(_ stringValue: String) -> URL {
+        return URL(string: stringValue)!
+    }
+
+    public var datatypeValue: String {
+        return self.absoluteString
+    }
 }
 
 /// A global date formatter used to serialize and deserialize `NSDate` objects.

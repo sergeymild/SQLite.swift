@@ -47,6 +47,11 @@ class CoreFunctionsTests : XCTestCase {
         AssertSQL("('string' LIKE \"a\")", "string".like(Expression<String>("a")))
         AssertSQL("('string' LIKE \"a\" ESCAPE '\\')", "string".like(Expression<String>("a"), escape: "\\"))
     }
+    
+    func test_like_url_buildsExpressionWithLikeOperator() {
+        AssertSQL("(\"string\" LIKE 'a%')", url.like("a%"))
+        AssertSQL("(\"stringOptional\" LIKE 'b%')", urlOptional.like("b%"))
+    }
 
     func test_glob_buildsExpressionWithGlobOperator() {
         AssertSQL("(\"string\" GLOB 'a*')", string.glob("a*"))

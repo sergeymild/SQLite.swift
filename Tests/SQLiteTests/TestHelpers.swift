@@ -97,6 +97,9 @@ let int64Optional = Expression<Int64?>("int64Optional")
 let string = Expression<String>("string")
 let stringOptional = Expression<String?>("stringOptional")
 
+let url = Expression<URL>("string")
+let urlOptional = Expression<URL?>("stringOptional")
+
 func AssertSQL(_ expression1: @autoclosure () -> String, _ expression2: @autoclosure () -> Expressible, file: StaticString = #file, line: UInt = #line) {
     XCTAssertEqual(expression1(), expression2().sql, file: file, line: line)
 }

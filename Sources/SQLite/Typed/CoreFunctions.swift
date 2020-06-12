@@ -672,6 +672,110 @@ extension ExpressionType where UnderlyingType == String? {
 
 }
 
+extension ExpressionType where UnderlyingType == URL {
+    /// Builds a copy of the expression appended with a `LIKE` query against the
+    /// given pattern.
+    ///
+    ///     let email = Expression<String?>("email")
+    ///     email.like("%@example.com")
+    ///     // "email" LIKE '%@example.com'
+    ///     email.like("99\\%@%", escape: "\\")
+    ///     // "email" LIKE '99\%@%' ESCAPE '\'
+    ///
+    /// - Parameters:
+    ///
+    ///   - pattern: A pattern to match.
+    ///
+    ///   - escape: An (optional) character designated for escaping
+    ///     pattern-matching characters (*i.e.*, the `%` and `_` characters).
+    ///
+    /// - Returns: A copy of the expression appended with a `LIKE` query against
+    ///   the given pattern.
+    public func like(_ pattern: String, escape character: Character? = nil) -> Expression<Bool?> {
+        guard let character = character else {
+            return Function.like.infix(self, pattern)
+        }
+        return Expression("(\(template) LIKE ? ESCAPE ?)", bindings + [pattern, String(character)])
+    }
+    
+    /// Builds a copy of the expression appended with a `LIKE` query against the
+    /// given pattern.
+    ///
+    ///     let email = Expression<String>("email")
+    ///     let pattern = Expression<String>("pattern")
+    ///     email.like(pattern)
+    ///     // "email" LIKE "pattern"
+    ///
+    /// - Parameters:
+    ///
+    ///   - pattern: A pattern to match.
+    ///
+    ///   - escape: An (optional) character designated for escaping
+    ///     pattern-matching characters (*i.e.*, the `%` and `_` characters).
+    ///
+    /// - Returns: A copy of the expression appended with a `LIKE` query against
+    ///   the given pattern.
+    public func like(_ pattern: Expression<String>, escape character: Character? = nil) -> Expression<Bool?> {
+        guard let character = character else {
+            return Function.like.infix(self, pattern)
+        }
+        let like: Expression<Bool> = Function.like.infix(self, pattern, wrap: false)
+        return Expression("(\(like.template) ESCAPE ?)", like.bindings + [String(character)])
+    }
+}
+
+extension ExpressionType where UnderlyingType == URL? {
+    /// Builds a copy of the expression appended with a `LIKE` query against the
+    /// given pattern.
+    ///
+    ///     let email = Expression<String?>("email")
+    ///     email.like("%@example.com")
+    ///     // "email" LIKE '%@example.com'
+    ///     email.like("99\\%@%", escape: "\\")
+    ///     // "email" LIKE '99\%@%' ESCAPE '\'
+    ///
+    /// - Parameters:
+    ///
+    ///   - pattern: A pattern to match.
+    ///
+    ///   - escape: An (optional) character designated for escaping
+    ///     pattern-matching characters (*i.e.*, the `%` and `_` characters).
+    ///
+    /// - Returns: A copy of the expression appended with a `LIKE` query against
+    ///   the given pattern.
+    public func like(_ pattern: String, escape character: Character? = nil) -> Expression<Bool?> {
+        guard let character = character else {
+            return Function.like.infix(self, pattern)
+        }
+        return Expression("(\(template) LIKE ? ESCAPE ?)", bindings + [pattern, String(character)])
+    }
+    
+    /// Builds a copy of the expression appended with a `LIKE` query against the
+    /// given pattern.
+    ///
+    ///     let email = Expression<String>("email")
+    ///     let pattern = Expression<String>("pattern")
+    ///     email.like(pattern)
+    ///     // "email" LIKE "pattern"
+    ///
+    /// - Parameters:
+    ///
+    ///   - pattern: A pattern to match.
+    ///
+    ///   - escape: An (optional) character designated for escaping
+    ///     pattern-matching characters (*i.e.*, the `%` and `_` characters).
+    ///
+    /// - Returns: A copy of the expression appended with a `LIKE` query against
+    ///   the given pattern.
+    public func like(_ pattern: Expression<String>, escape character: Character? = nil) -> Expression<Bool?> {
+        guard let character = character else {
+            return Function.like.infix(self, pattern)
+        }
+        let like: Expression<Bool> = Function.like.infix(self, pattern, wrap: false)
+        return Expression("(\(like.template) ESCAPE ?)", like.bindings + [String(character)])
+    }
+}
+
 extension Collection where Iterator.Element : Value {
 
     /// Builds a copy of the expression prepended with an `IN` check against the

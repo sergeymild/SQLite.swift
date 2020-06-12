@@ -1053,6 +1053,10 @@ extension Connection {
         guard let value = try scalar(expression.template, expression.bindings) as? V.Datatype else { return nil }
         return V.fromDatatypeValue(value)
     }
+    
+    public func pluck(_ query: String) throws -> [Binding?] {
+        return try prepare(query).failableNext() ?? []
+    }
 
     public func pluck(_ query: QueryType) throws -> Row? {
         return try prepareRowIterator(query.limit(1, query.clauses.limit?.offset)).failableNext()

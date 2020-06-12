@@ -510,6 +510,14 @@ class QueryIntegrationTests : SQLiteTestCase {
         let rowid = try! db.run(users.insert(email <- "alice@example.com"))
         XCTAssertEqual(rowid, try! db.pluck(users)![id])
     }
+    
+    func test_raw_query_pluck() {
+        db.trace { print($0) }
+        let rowid = try! db.run(users.insert(email <- "alice@example.com"))
+        let query = "select * from \(users.name) limit 1"
+        let binding = try! db.pluck(query)[0]
+        XCTAssertEqual(rowid, (binding as! Int64))
+    }
 
     func test_insert() {
         let id = try! db.run(users.insert(email <- "alice@example.com"))
